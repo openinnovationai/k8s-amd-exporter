@@ -1,3 +1,5 @@
+[![slack](https://img.shields.io/badge/slack-brigade-brightgreen.svg?logo=slack)](https://app.slack.com/client/T076JPMCTDM/C08C871TRGB)
+
 # AMD SMI Exporter 
 
 The AMD SMI Exporter is an application that exports AMD CPU & GPU metrics to the Prometheus server. It employs the [E-SMI In-Band C library](https://github.com/amd/esmi_ib_library.git) & [ROCm SMI Library](https://github.com/RadeonOpenCompute/rocm_smi_lib.git) for its data acquisition. The exporter and the E-SMI/ROCm-SMI library have a
