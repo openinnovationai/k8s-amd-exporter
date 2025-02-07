@@ -1,0 +1,68 @@
+name: Bug Report
+description: Report a bug in k8s-amd-exporter
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Thank you for taking the time to report a bug!**
+        Please fill out the following information to help us diagnose the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: Provide a clear and concise description of the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Provide steps to reproduce the issue.
+      placeholder: |
+        1. Run the exporter with...
+        2. Check the logs...
+        3. Observe the error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste any logs or error messages here.
+      render: shell
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Select the environment where the issue occurs.
+      options:
+        - Kubernetes v1.28+
+        - Kubernetes v1.27
+        - Kubernetes v1.26 or older
+    validations:
+      required: true
+
+  - type: input
+    id: exporter-version
+    attributes:
+      label: k8s-amd-exporter Version
+      description: Provide the exporter version (e.g., v0.1.0).
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here.
