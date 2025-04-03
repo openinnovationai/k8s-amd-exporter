@@ -86,4 +86,4 @@ push-image: tag-image
 
 .PHONY: lint
 lint: ## Run lint
-	@$(CONTAINERTOOL) run --rm -v $(PWD):/app -w /app golangci/golangci-lint:v1.61.0-alpine golangci-lint run --fix --timeout=10m
+	@$(CONTAINERTOOL) run --rm -v $(PWD):/app -w /app golangci/golangci-lint:v2.0.2-alpine golangci-lint run --fix --timeout=10m

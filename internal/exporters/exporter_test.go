@@ -70,42 +70,42 @@ func TestCollectWithoutAdditionalLabels(t *testing.T) {
 	exporter := exporters.NewExporter(&settings)
 
 	want := []prometheus.Metric{
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, []string{"gpu_dev_id", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, []string{"gpu_dev_id", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, []string{"gpu_power_cap", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, []string{"gpu_power_cap", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, []string{"gpu_power", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, []string{"gpu_power", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, []string{"gpu_current_temperature", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, []string{"gpu_current_temperature", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, []string{"gpu_SCLK", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, []string{"gpu_SCLK", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, []string{"gpu_MCLK", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, []string{"gpu_MCLK", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, []string{"gpu_use_percent", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, []string{"gpu_use_percent", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "node-1"}),
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, []string{"gpu_memory_use_percent", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "node-1", "pod-ii", "container-1", "team-b"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "node-1", "pod-c", "container-1", "team-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, []string{"gpu_memory_use_percent", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", "node-1"}),
 
-		metricfixtures.ConstGaugeMetric("num_sockets", 0, []string{"num_sockets"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_threads", 0, []string{"num_threads"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_threads_per_core", 0, []string{"num_threads_per_core"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_gpus", 3, []string{"num_gpus"}, []string{""}),
+		metricfixtures.ConstGaugeMetric("num_sockets", 0, []string{"num_sockets", "exported_node"}, []string{"", "node-1"}),
+		metricfixtures.ConstGaugeMetric("num_threads", 0, []string{"num_threads", "exported_node"}, []string{"", "node-1"}),
+		metricfixtures.ConstGaugeMetric("num_threads_per_core", 0, []string{"num_threads_per_core", "exported_node"}, []string{"", "node-1"}),
+		metricfixtures.ConstGaugeMetric("num_gpus", 3, []string{"num_gpus", "exported_node"}, []string{"", "node-1"}),
 	}
 
 	// When
@@ -178,42 +178,42 @@ func TestCollectWithAdditionalLabels(t *testing.T) {
 	exporter := exporters.NewExporter(&settings)
 
 	want := []prometheus.Metric{
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, []string{"gpu_dev_id", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, metricfixtures.GPULabels("gpu_dev_id", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_dev_id", 0, []string{"gpu_dev_id", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, []string{"gpu_power_cap", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, metricfixtures.GPULabels("gpu_power_cap", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_power_cap", 0.0003, []string{"gpu_power_cap", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, []string{"gpu_power", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, metricfixtures.GPULabels("gpu_power", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstCounterMetric("gpu_power", 0.000301, []string{"gpu_power", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, []string{"gpu_current_temperature", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, metricfixtures.GPULabels("gpu_current_temperature", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_current_temperature", 0.302, []string{"gpu_current_temperature", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, []string{"gpu_SCLK", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, metricfixtures.GPULabels("gpu_SCLK", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_SCLK", 0.000303, []string{"gpu_SCLK", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, []string{"gpu_MCLK", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, metricfixtures.GPULabels("gpu_MCLK", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_MCLK", 0.000304, []string{"gpu_MCLK", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, []string{"gpu_use_percent", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, metricfixtures.GPULabels("gpu_use_percent", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_use_percent", 305, []string{"gpu_use_percent", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "pod-ii", "container-1", "team-b", "", "value-1", "value-2"}),
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "pod-c", "container-1", "team-2", "", "value-i", "value-ii"}),
-		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, []string{"gpu_memory_use_percent", "productname", "device"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent", "label_1", "label_2"), []string{"0", "amdinstinctmi250(mcm)oamacmba", "amd0", "", "pod-ii", "container-1", "team-b", "value-1", "value-2"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, metricfixtures.GPULabels("gpu_memory_use_percent", "label_1", "label_2"), []string{"1", "amdinstinctmi250(mcm)oamacmba", "amd1", "", "pod-c", "container-1", "team-2", "value-i", "value-ii"}),
+		metricfixtures.ConstGaugeMetric("gpu_memory_use_percent", 306, []string{"gpu_memory_use_percent", "productname", "device", "exported_node"}, []string{"2", "amdinstinctmi250(mcm)oamacmba", "amd2", ""}),
 
-		metricfixtures.ConstGaugeMetric("num_sockets", 0, []string{"num_sockets"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_threads", 0, []string{"num_threads"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_threads_per_core", 0, []string{"num_threads_per_core"}, []string{""}),
-		metricfixtures.ConstGaugeMetric("num_gpus", 3, []string{"num_gpus"}, []string{""}),
+		metricfixtures.ConstGaugeMetric("num_sockets", 0, []string{"num_sockets", "exported_node"}, []string{"", ""}),
+		metricfixtures.ConstGaugeMetric("num_threads", 0, []string{"num_threads", "exported_node"}, []string{"", ""}),
+		metricfixtures.ConstGaugeMetric("num_threads_per_core", 0, []string{"num_threads_per_core", "exported_node"}, []string{"", ""}),
+		metricfixtures.ConstGaugeMetric("num_gpus", 3, []string{"num_gpus", "exported_node"}, []string{"", ""}),
 	}
 
 	// When

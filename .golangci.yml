@@ -1,67 +1,81 @@
+version: "2"
 run:
-  # Include test files or not.
-  # Default: true
   tests: false
 linters:
-  enable-all: true
+  default: all
   disable:
-    - gomnd
-    - execinquery
-    - exportloopref
     - depguard
-linters-settings:
-  tagliatelle:
-    # Check the struck tag name case.
-    case:
-      # Use the struct field name to check the name of the struct tag.
-      # Default: false
-      use-field-name: false
-      rules:
-        # Any struct tag type can be used.
-        # Support string case: `camel`, `pascal`, `kebab`, `snake`, `goCamel`, `goPascal`, `goKebab`, `goSnake`, `upper`, `lower`
-        json:     snake
-        yaml:     camel
-        xml:      camel
-        whatever: kebab
-  lll:
-    # max line length, lines longer will be reported. Default is 120.
-    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
-    line-length: 140
-issues:
-  exclude-files:
-    - internal/sdk/unittests/fakekubelet/podresources.go
-    - internal/sdk/unittests/k8sfixtures/fixture.go
-    - internal/sdk/unittests/metricfixtures/fixture.go
-    - internal/amd/cpustat.go
-    - internal/amd/goamdsmi/file.go
-  exclude-rules:
-    # Exclude some linters from running on app file.
-    - path: internal/kubernetes/k8s.go
-      linters:
-        - nilnil
-    - path: internal/exporters/domain/metrics/metrics.go
-      linters:
-        - ireturn
-    - path: internal/application/app.go
-      linters:
-        - gochecknoglobals
-    # Exclude some linters appkit.
-    - path-except: internal/appkit/unittests\.go
-      linters:
-        - wrapcheck
-        - forcetypeassert
-        - exhaustruct
-        - gosec
-        - gochecknoglobals
-        - mnd
-        - perfsprint
-    - path-except: internal/appkit/e2etests\.go
-      linters:
-        - wrapcheck
-        - forcetypeassert
-        - exhaustruct
-        - gosec
-        - gochecknoglobals
-        - mnd
-        - perfsprint
-        - varnamelen
+    - mnd
+  settings:
+    lll:
+      line-length: 140
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+          whatever: kebab
+          xml: camel
+          yaml: camel
+        use-field-name: false
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - nilnil
+        path: internal/kubernetes/k8s.go
+      - linters:
+          - ireturn
+        path: internal/exporters/domain/metrics/metrics.go
+      - linters:
+          - gochecknoglobals
+        path: internal/application/app.go
+      - linters:
+          - exhaustruct
+          - forcetypeassert
+          - gochecknoglobals
+          - gosec
+          - mnd
+          - perfsprint
+          - wrapcheck
+        path-except: internal/appkit/unittests\.go
+      - linters:
+          - exhaustruct
+          - forcetypeassert
+          - gochecknoglobals
+          - gosec
+          - mnd
+          - perfsprint
+          - varnamelen
+          - wrapcheck
+        path-except: internal/appkit/e2etests\.go
+    paths:
+      - internal/sdk/unittests/fakekubelet/podresources.go
+      - internal/sdk/unittests/k8sfixtures/fixture.go
+      - internal/sdk/unittests/metricfixtures/fixture.go
+      - internal/amd/cpustat.go
+      - internal/amd/goamdsmi/file.go
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - internal/sdk/unittests/fakekubelet/podresources.go
+      - internal/sdk/unittests/k8sfixtures/fixture.go
+      - internal/sdk/unittests/metricfixtures/fixture.go
+      - internal/amd/cpustat.go
+      - internal/amd/goamdsmi/file.go
+      - third_party$
+      - builtin$
+      - examples$

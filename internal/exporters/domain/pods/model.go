@@ -6,6 +6,12 @@ import (
 	"slices"
 )
 
+// Resources contains data about pods using gpus and the node name.
+type Resources struct {
+	Pods     map[string][]PodInfo
+	NodeName string
+}
+
 // PodInfo contains information related to pods.
 type PodInfo struct {
 	Name      string
@@ -25,6 +31,12 @@ type Labels map[string]string
 
 // PodPerDevices map of pods where device id is the key.
 type PodPerDevices map[string]PodInfo
+
+func NewResources() *Resources {
+	return &Resources{
+		Pods: make(map[string][]PodInfo),
+	}
+}
 
 func NewNamespacedName(name, namespace string) NamespacedName {
 	if namespace == "" {

@@ -31,7 +31,7 @@ func ConstGaugeMetric(name string, value float64, labels, labelValues []string) 
 }
 
 func GPULabels(label string, customLabels ...string) []string {
-	base := []string{label, "productname", "device", "exported_pod", "exported_container", "exported_namespace", "exported_node"}
+	base := []string{label, "productname", "device", "exported_node", "exported_pod", "exported_container", "exported_namespace"}
 	base = append(base, customLabels...)
 
 	return base
