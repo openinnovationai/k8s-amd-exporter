@@ -48,7 +48,7 @@ type AMDMetrics struct {
 	GPUUsage       *CustomMetric
 	GPUMemoryUsage *CustomMetric
 	CardsInfo      [gpus.MaxNumGPUDevices]gpus.Card
-	K8SResources   map[string][]pods.PodInfo
+	K8SResources   *pods.Resources
 	Data           gpus.AMDParamsHandler // This is the Scan() function handle
 	logger         *slog.Logger
 	withKubernetes bool
@@ -105,42 +105,58 @@ func (a *AMDMetrics) initializeMetrics() *AMDMetrics {
 		HelpText: amdMetricHelpTextDefault,
 		Labels:   []string{"socket"},
 	}
-	a.CoreEnergy = newAMDCounterMetric("core_energy", "thread")
-	a.SocketEnergy = newAMDCounterMetric("socket_energy", "socket")
-	a.BoostLimit = newAMDGaugeMetric("boost_limit", "thread")
-	a.SocketPower = newAMDGaugeMetric("socket_power", "socket")
-	a.PowerLimit = newAMDGaugeMetricWithName("power_limit")
-	a.ProchotStatus = newAMDGaugeMetricWithName("prochot_status")
-	a.Sockets = newAMDGaugeMetricWithName("num_sockets")
-	a.Threads = newAMDGaugeMetricWithName("num_threads")
-	a.ThreadsPerCore = newAMDGaugeMetricWithName("num_threads_per_core")
-	a.NumGPUs = newAMDGaugeMetricWithName("num_gpus")
-	a.GPUDevID = newAMDGPUGaugeMetric("gpu_dev_id")
-	a.GPUPowerCap = newAMDGPUGaugeMetric("gpu_power_cap").
+	a.CoreEnergy = a.newAMDCounterMetric("core_energy", "thread")
+	a.SocketEnergy = a.newAMDCounterMetric("socket_energy", "socket")
+	a.BoostLimit = a.newAMDGaugeMetric("boost_limit", "thread")
+	a.SocketPower = a.newAMDGaugeMetric("socket_power", "socket")
+	a.PowerLimit = a.newAMDGaugeMetric("power_limit", "power_limit")
+	a.ProchotStatus = a.newAMDGaugeMetric("prochot_status", "prochot_status")
+	a.Sockets = a.newAMDGaugeMetric("num_sockets", "num_sockets")
+	a.Threads = a.newAMDGaugeMetric("num_threads", "num_threads")
+	a.ThreadsPerCore = a.newAMDGaugeMetric("num_threads_per_core", "num_threads_per_core")
+	a.NumGPUs = a.newAMDGaugeMetric("num_gpus", "num_gpus")
+	a.GPUDevID = a.newAMDGPUGaugeMetric("gpu_dev_id")
+	a.GPUPowerCap = a.newAMDGPUGaugeMetric("gpu_power_cap").
 		WithDivisor(1e6)
-	a.GPUPower = newAMDGPUCounterMetric("gpu_power").
+	a.GPUPower = a.newAMDGPUCounterMetric("gpu_power").
 		WithDivisor(1e6)
-	a.GPUTemperature = newAMDGPUGaugeMetric("gpu_current_temperature").
+	a.GPUTemperature = a.newAMDGPUGaugeMetric("gpu_current_temperature").
 		WithDivisor(1e3)
-	a.GPUSCLK = newAMDGPUGaugeMetric("gpu_SCLK").
+	a.GPUSCLK = a.newAMDGPUGaugeMetric("gpu_SCLK").
 		WithDivisor(1e6)
-	a.GPUMCLK = newAMDGPUGaugeMetric("gpu_MCLK").
+	a.GPUMCLK = a.newAMDGPUGaugeMetric("gpu_MCLK").
 		WithDivisor(1e6)
-	a.GPUUsage = newAMDGPUGaugeMetric("gpu_use_percent")
-	a.GPUMemoryUsage = newAMDGPUGaugeMetric("gpu_memory_use_percent")
+	a.GPUUsage = a.newAMDGPUGaugeMetric("gpu_use_percent")
+	a.GPUMemoryUsage = a.newAMDGPUGaugeMetric("gpu_memory_use_percent")
 
 	return a
 }
 
-func newAMDGaugeMetric(name string, label ...string) *CustomMetric {
-	return newAMDMetric(name, prometheus.GaugeValue, label...)
+func (a *AMDMetrics) newAMDGaugeMetric(name string, label ...string) *CustomMetric {
+	return a.newAMDMetric(name, prometheus.GaugeValue, label...)
 }
 
-func newAMDCounterMetric(name string, label ...string) *CustomMetric {
-	return newAMDMetric(name, prometheus.CounterValue, label...)
+func (a *AMDMetrics) newAMDCounterMetric(name string, label ...string) *CustomMetric {
+	return a.newAMDMetric(name, prometheus.CounterValue, label...)
 }
 
-func newAMDMetric(name string, mType prometheus.ValueType, label ...string) *CustomMetric {
+func (a *AMDMetrics) newAMDGPUGaugeMetric(name string) *CustomMetric {
+	return a.newAMDGPUMetric(name, prometheus.GaugeValue)
+}
+
+func (a *AMDMetrics) newAMDGPUCounterMetric(name string) *CustomMetric {
+	return a.newAMDGPUMetric(name, prometheus.CounterValue)
+}
+
+func (a *AMDMetrics) newAMDGPUMetric(name string, mType prometheus.ValueType) *CustomMetric {
+	return a.newAMDMetric(name, mType, name, productNameLabel, deviceNameLabel)
+}
+
+func (a *AMDMetrics) newAMDMetric(name string, mType prometheus.ValueType, label ...string) *CustomMetric {
+	if a.withKubernetes {
+		label = append(label, nodeNameLabel)
+	}
+
 	return &CustomMetric{
 		Name:      name,
 		Namespace: amdNamespace,             // metric namespace
@@ -148,27 +164,6 @@ func newAMDMetric(name string, mType prometheus.ValueType, label ...string) *Cus
 		Labels:    label,                    // The metric's variable label dimensions.
 		Type:      mType,
 	}
-}
-
-func newAMDGPUGaugeMetric(name string) *CustomMetric {
-	return newAMDGPUMetric(name, prometheus.GaugeValue)
-}
-
-func newAMDGPUCounterMetric(name string) *CustomMetric {
-	return newAMDGPUMetric(name, prometheus.CounterValue)
-}
-
-func newAMDGaugeMetricWithName(name string) *CustomMetric {
-	return newAMDMetric(name, prometheus.GaugeValue, name)
-}
-
-func newAMDGPUMetric(name string, mType prometheus.ValueType) *CustomMetric {
-	return newAMDMetric(name, mType, name, productNameLabel, deviceNameLabel)
-}
-
-// k8sVariableLabels return list of kubernetes labels required in metrics.
-func k8sVariableLabels() []string {
-	return []string{podNameLabel, containerNameLabel, namespaceNameLabel, nodeNameLabel}
 }
 
 // WithDivisor enable dividing metric value by given divisor.
@@ -223,12 +218,12 @@ func (a *AMDMetrics) CollectAndBuildMetrics() []prometheus.Metric {
 
 	metrics := make([]prometheus.Metric, 0)
 
-	metrics = append(metrics, buildMetrics(data.CoreEnergy[:data.Threads], data.Threads, a.CoreEnergy)...)
-	metrics = append(metrics, buildMetrics(data.CoreBoost[:data.Threads], data.Threads, a.BoostLimit)...)
-	metrics = append(metrics, buildMetrics(data.SocketEnergy[:data.Sockets], data.Sockets, a.SocketEnergy)...)
-	metrics = append(metrics, buildMetrics(data.SocketPower[:data.Sockets], data.Sockets, a.SocketPower)...)
-	metrics = append(metrics, buildMetrics(data.PowerLimit[:data.Sockets], data.Sockets, a.PowerLimit)...)
-	metrics = append(metrics, buildMetrics(data.ProchotStatus[:data.Sockets], data.Sockets, a.ProchotStatus)...)
+	metrics = append(metrics, a.buildMetrics(data.CoreEnergy[:data.Threads], data.Threads, a.CoreEnergy)...)
+	metrics = append(metrics, a.buildMetrics(data.CoreBoost[:data.Threads], data.Threads, a.BoostLimit)...)
+	metrics = append(metrics, a.buildMetrics(data.SocketEnergy[:data.Sockets], data.Sockets, a.SocketEnergy)...)
+	metrics = append(metrics, a.buildMetrics(data.SocketPower[:data.Sockets], data.Sockets, a.SocketPower)...)
+	metrics = append(metrics, a.buildMetrics(data.PowerLimit[:data.Sockets], data.Sockets, a.PowerLimit)...)
+	metrics = append(metrics, a.buildMetrics(data.ProchotStatus[:data.Sockets], data.Sockets, a.ProchotStatus)...)
 
 	// GPU metrics
 	metrics = append(metrics, a.buildGPUMetrics(data.GPUDevID[:data.NumGPUs], data.NumGPUs, a.GPUDevID)...)
@@ -246,7 +241,7 @@ func (a *AMDMetrics) CollectAndBuildMetrics() []prometheus.Metric {
 }
 
 // buildMetrics builds prometheus metric based on given amd metric.
-func buildMetrics(
+func (a *AMDMetrics) buildMetrics(
 	data []float64,
 	attrValue uint,
 	metric *CustomMetric,
@@ -258,6 +253,12 @@ func buildMetrics(
 	metrics := make([]prometheus.Metric, attrValue)
 
 	for i := range data {
+		if a.withKubernetes {
+			metrics[i] = metric.buildPrometheusMetric(data[i], strconv.Itoa(i), a.K8SResources.NodeName)
+
+			continue
+		}
+
 		metrics[i] = metric.buildPrometheusMetric(data[i], strconv.Itoa(i))
 	}
 
@@ -286,10 +287,10 @@ func (a *AMDMetrics) buildGPUMetrics(
 // resourceGroupMetrics build global metrics such as sockets, thread and number of GPUs.
 func (a *AMDMetrics) resourceGroupMetrics(params *gpus.AMDParams) []prometheus.Metric {
 	return []prometheus.Metric{
-		a.Sockets.buildPrometheusMetric(float64(params.Sockets), ""),
-		a.Threads.buildPrometheusMetric(float64(params.Threads), ""),
-		a.ThreadsPerCore.buildPrometheusMetric(float64(params.ThreadsPerCore), ""),
-		a.NumGPUs.buildPrometheusMetric(float64(params.NumGPUs), ""),
+		a.Sockets.buildPrometheusMetric(float64(params.Sockets), "", a.K8SResources.NodeName),
+		a.Threads.buildPrometheusMetric(float64(params.Threads), "", a.K8SResources.NodeName),
+		a.ThreadsPerCore.buildPrometheusMetric(float64(params.ThreadsPerCore), "", a.K8SResources.NodeName),
+		a.NumGPUs.buildPrometheusMetric(float64(params.NumGPUs), "", a.K8SResources.NodeName),
 	}
 }
 
@@ -308,10 +309,15 @@ func (a *AMDMetrics) newMetricWithResources(
 		}
 	}
 
-	podsInfo, exist := a.K8SResources[a.CardsInfo[cardIndex].PCIBus]
+	podsInfo, exist := a.K8SResources.Pods[a.CardsInfo[cardIndex].PCIBus]
 	if !exist {
 		return []prometheus.Metric{
-			metric.buildPrometheusMetric(value, labelValues...),
+			// metric.buildPrometheusMetric(value, labelValues...),
+			prometheus.MustNewConstMetric(
+				metric.NewDesc(),
+				metric.Type,
+				metric.transformValue(value),
+				append(labelValues, a.K8SResources.NodeName)...),
 		}
 	}
 
@@ -352,10 +358,10 @@ func buildK8SPodLabelValues(pod pods.PodInfo, existingLabelValues []string) ([]s
 	values := slices.Concat(
 		existingLabelValues,
 		[]string{
+			pod.NodeName,
 			pod.Name,
 			pod.Container,
 			pod.Namespace,
-			pod.NodeName,
 		},
 	)
 
@@ -366,6 +372,11 @@ func buildK8SPodLabelValues(pod pods.PodInfo, existingLabelValues []string) ([]s
 	}
 
 	return labels, values
+}
+
+// k8sVariableLabels return list of kubernetes labels required in metrics.
+func k8sVariableLabels() []string {
+	return []string{podNameLabel, containerNameLabel, namespaceNameLabel}
 }
 
 // formatLabel format label to follow prometheus conventions.

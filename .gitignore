@@ -18,6 +18,9 @@ Dockerfile.cross
 # Go workspace file
 go.work
 
+# golangci-lint backup yml file
+.golangci.bck.yml
+
 # Kubernetes Generated files - skip generated files, except for vendored files
 !vendor/**/zz_generated.*
 deploy/amd-gpu-pod-2-test.yaml

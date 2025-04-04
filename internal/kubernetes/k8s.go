@@ -276,6 +276,10 @@ func (c *Client) PodNamespace() string {
 	return c.podNamespace
 }
 
+func (c *Client) NodeName() string {
+	return c.nodeName
+}
+
 // containsRequestedDevices return true if the given resource names match amd resources
 // or provided custom resource names by configuration.
 func (c *Client) containsRequestedDevices(resourceName string) bool {

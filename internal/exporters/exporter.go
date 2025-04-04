@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/openinnovationai/k8s-amd-exporter/internal/exporters/domain/gpus"
-	"github.com/prometheus/client_golang/prometheus"
 	"github.com/openinnovationai/k8s-amd-exporter/internal/exporters/domain/metrics"
 	"github.com/openinnovationai/k8s-amd-exporter/internal/exporters/domain/pods"
 	"github.com/openinnovationai/k8s-amd-exporter/internal/kubernetes"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 type Setup struct {
@@ -82,7 +82,7 @@ func (e *Exporter) Collect(metricStream chan<- prometheus.Metric) {
 		e.logger.Error("scanning k8s resources", slog.String("error", err.Error()))
 		e.logger.Info("will continue collecting without k8s resources")
 
-		k8sResources = make(map[string][]pods.PodInfo)
+		k8sResources = pods.NewResources()
 	}
 
 	e.amdMetrics.K8SResources = k8sResources
@@ -95,9 +95,9 @@ func (e *Exporter) Collect(metricStream chan<- prometheus.Metric) {
 }
 
 // scanK8SResources scans k8s resources in order to map pods with gpu metrics.
-func (e *Exporter) scanK8SResources(ctx context.Context) (map[string][]pods.PodInfo, error) {
+func (e *Exporter) scanK8SResources(ctx context.Context) (*pods.Resources, error) {
 	if !e.withKubernetes {
-		return make(map[string][]pods.PodInfo), nil
+		return pods.NewResources(), nil
 	}
 	// Get apps using GPUs
 	apps, err := e.k8sClient.GetPodsUsingDevices(ctx)
@@ -134,7 +134,12 @@ func (e *Exporter) scanK8SResources(ctx context.Context) (map[string][]pods.PodI
 		deviceToPodMap[deviceID] = append(deviceToPodMap[deviceID], podInfo)
 	}
 
-	return deviceToPodMap, nil
+	result := pods.Resources{
+		Pods:     deviceToPodMap,
+		NodeName: e.k8sClient.NodeName(),
+	}
+
+	return &result, nil
 }
 
 // calculateAdditionalDeviceIDs calculate other possible device ids for pods based
