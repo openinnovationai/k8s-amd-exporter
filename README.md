@@ -1,4 +1,8 @@
 [![slack](https://img.shields.io/badge/slack-brigade-brightgreen.svg?logo=slack)](https://app.slack.com/client/T076JPMCTDM/C08C871TRGB)
+[![GoReport Widget]][GoReport Status]
+
+[GoReport Widget]: https://goreportcard.com/badge/github.com/openinnovationai/k8s-amd-exporter
+[GoReport Status]: https://goreportcard.com/report/github.com/openinnovationai/k8s-amd-exporter
 
 # AMD SMI Exporter 
 
